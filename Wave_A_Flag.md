@@ -9,5 +9,5 @@ Can you invoke help flags for a tool or binary? This program has extraordinarily
 - run the file: `./warm`
 - the program takes the -h argument, so if we run `./warm -h` we get the flag
 
-#Flag
+# Flag
 - **picoCTF{b1scu1ts_4nd_gr4vy_f0668f62}**
