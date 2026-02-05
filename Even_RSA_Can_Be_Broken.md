@@ -1,0 +1,33 @@
+# Description
+
+This service provides you an encrypted flag. Can you decrypt it with just N & e? Connect to the program with netcat: `$ nc verbal-sleep.picoctf.net 55441`
+
+# Solution
+
+- after connecting to the server, we get the N value, the exponent and the cyphertext
+	- N: `23060384131207373657800031812620487641618796333417246809549320397869425437185264577910281415364289079765058631414157378958878611573626408578972529246837038`
+	- e: `65537`
+	- cyphertext: `6285040345715311070353146478946240525699434101346327790457303984155917638510492832145335575526226254472938283222562009547567493150191413668751365409787293`
+- the N value is changing with each interrogation of the server
+- first step is to factorize N, and i did this using this online tool: https://factordb.com/
+- after this, i observe that all N values are just a prime value x 2
+- this means that i can find phi by subtracting one from that prime value
+- now, with all these values, i can write a simple python script for deciphering the text
+
+```python
+from Crypto.Util.number import inverse, long_to_bytes
+phi = 11530192065603686828900015906310243820809398166708623404774660198934712718592632288955140707682144539882529315707078689479439305786813204289486264623418518
+e = 65537
+d = inverse(e, phi)
+
+cyphertext = 6285040345715311070353146478946240525699434101346327790457303984155917638510492832145335575526226254472938283222562009547567493150191413668751365409787293
+n = 23060384131207373657800031812620487641618796333417246809549320397869425437185264577910281415364289079765058631414157378958878611573626408578972529246837038
+
+decrypted = pow(cyphertext, d, n)
+plaintext = long_to_bytes(decrypted)
+print (plaintext.decode())
+```
+
+# Flag
+
+- and this gives me the flag: **picoCTF{tw0_1$_pr!m375129bb1}**
